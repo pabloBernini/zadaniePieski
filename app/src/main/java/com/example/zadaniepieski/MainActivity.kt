@@ -104,8 +104,11 @@ fun SearchListApp() {
                         }) {
                             Text(if (pinnedItems.contains(item)) "❤️" else "💗")
                         }
-                        IconButton(onClick = { /* tu bedzie delete */ }) {
-                            Text("️🗑️")
+                        IconButton(onClick = {
+                            itemList = itemList.filter { it != item }
+                            originalList = originalList.filter { it != item }
+                            pinnedItems = pinnedItems.minus(item)
+                        }) { Text("️🗑️")
                         }
                     }
                     HorizontalDivider()
