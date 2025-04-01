@@ -28,6 +28,7 @@ fun SearchListApp() {
     var searchText by remember { mutableStateOf("") }
     var itemList by remember { mutableStateOf(listOf<String>()) }
     var originalList by remember { mutableStateOf(listOf<String>()) }
+    var pinnedItems by remember { mutableStateOf(setOf<String>()) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -48,7 +49,9 @@ fun SearchListApp() {
             )
             Spacer(modifier = Modifier.width(8.dp))
             Button(onClick = {
-                itemList = originalList
+                val pinnedList = originalList.filter { pinnedItems.contains(it) }
+                val unpinnedList = originalList.filter { !pinnedItems.contains(it) }
+                itemList = pinnedList + unpinnedList
                 if (searchText.isNotEmpty()) {
                     itemList = itemList + searchText
                     originalList = itemList
@@ -59,7 +62,9 @@ fun SearchListApp() {
             }
             Spacer(modifier = Modifier.width(8.dp))
             Button(onClick = {
-                itemList = originalList
+                val pinnedList = originalList.filter { pinnedItems.contains(it) }
+                val unpinnedList = originalList.filter { !pinnedItems.contains(it) }
+                itemList = pinnedList + unpinnedList
                 if (searchText.isNotEmpty()) {
                     val foundItem = itemList.find { it.equals(searchText, ignoreCase = true) }
                     if (foundItem != null) {
@@ -88,11 +93,19 @@ fun SearchListApp() {
                     ) {
                         Text("🐶")
                         Text(text = item, modifier = Modifier.weight(1f).padding(horizontal = 8.dp))
-                        IconButton(onClick = { /* tu bedzie przypiecie */ }) {
-                            Text("️❤️")
+                        IconButton(onClick = {
+                            if (pinnedItems.contains(item)) {
+                                pinnedItems = pinnedItems.minus(item)
+                                itemList = originalList.filter { pinnedItems.contains(it) || it == item } + originalList.filter { !pinnedItems.contains(it) && it != item }
+                            } else {
+                                pinnedItems = pinnedItems.plus(item)
+                                itemList = listOf(item) + itemList.filter { it != item }
+                            }
+                        }) {
+                            Text(if (pinnedItems.contains(item)) "❤️" else "💗")
                         }
                         IconButton(onClick = { /* tu bedzie delete */ }) {
-                            Text("🗑️")
+                            Text("️🗑️")
                         }
                     }
                     HorizontalDivider()
