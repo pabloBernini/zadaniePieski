@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -128,17 +129,21 @@ fun SearchListApp() {
 
         Text("🐶: ${itemList.size}")
 
-        if (itemList.isNotEmpty()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            ) {
-                itemList.forEach { item ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+            if (itemList.isNotEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                ) {
+                    itemList.forEach { item ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth().clickable {
+                                context.startActivity(Intent(context, DetailsActivity::class.java).apply {
+                                    putExtra("dogName", item)
+                                })
+                            },
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
                         Text("🐶")
                         Text(text = item, modifier = Modifier.weight(1f).padding(horizontal = 8.dp))
                         IconButton(onClick = {
@@ -239,6 +244,49 @@ fun SettingsScreen() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+        }
+    }
+}
+class DetailsActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContent {
+            DetailsScreen(intent.getStringExtra("dogName") ?: "")
+        }
+    }
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DetailsScreen(dogName: String) {
+    val context = LocalContext.current
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Details") },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        context.startActivity(Intent(context, MainActivity::class.java))
+                    }) {
+                        Icon(painterResource(id = android.R.drawable.ic_menu_revert), contentDescription = "Powrót")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {
+                    }) {
+                        Icon(painterResource(id = android.R.drawable.ic_delete), contentDescription = "Usuń")
+                    }
+                }
+            )
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(dogName, modifier = Modifier.align(Alignment.CenterHorizontally))
         }
     }
 }
