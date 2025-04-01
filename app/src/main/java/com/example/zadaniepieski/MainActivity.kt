@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
@@ -26,13 +27,12 @@ class MainActivity : ComponentActivity() {
 fun SearchListApp() {
     var searchText by remember { mutableStateOf("") }
     var itemList by remember { mutableStateOf(listOf<String>()) }
-    var searchResult by remember { mutableStateOf<String?>(null) }
     var originalList by remember { mutableStateOf(listOf<String>()) }
 
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.Start
     ) {
         Row(
             modifier = Modifier
@@ -53,7 +53,6 @@ fun SearchListApp() {
                     itemList = itemList + searchText
                     originalList = itemList
                     searchText = ""
-                    searchResult = null
                 }
             }) {
                 Text("Add")
@@ -64,13 +63,8 @@ fun SearchListApp() {
                 if (searchText.isNotEmpty()) {
                     val foundItem = itemList.find { it.equals(searchText, ignoreCase = true) }
                     if (foundItem != null) {
-                        searchResult = foundItem
                         itemList = listOf(foundItem) + itemList.filter { it != foundItem }
-                    } else {
-                        searchResult = null
                     }
-                } else {
-                    searchResult = null
                 }
             }) {
                 Text("Find")
@@ -79,9 +73,7 @@ fun SearchListApp() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (searchResult != null) {
-            Text("Found: $searchResult")
-        }
+        Text("🐶: ${itemList.size}")
 
         if (itemList.isNotEmpty()) {
             Column(
@@ -90,12 +82,22 @@ fun SearchListApp() {
                     .padding(8.dp)
             ) {
                 itemList.forEach { item ->
-                    Text(text = item, modifier = Modifier.padding(4.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text("🐶")
+                        Text(text = item, modifier = Modifier.weight(1f).padding(horizontal = 8.dp))
+                        IconButton(onClick = { /* tu bedzie przypiecie */ }) {
+                            Text("️❤️")
+                        }
+                        IconButton(onClick = { /* tu bedzie delete */ }) {
+                            Text("🗑️")
+                        }
+                    }
                     HorizontalDivider()
                 }
             }
-        } else {
-            Text("List is empty.")
         }
     }
 }
