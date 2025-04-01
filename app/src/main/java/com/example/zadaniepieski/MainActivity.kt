@@ -279,13 +279,13 @@ fun DetailsScreen(dogName: String) {
                     IconButton(onClick = {
                         context.startActivity(Intent(context, MainActivity::class.java))
                     }) {
-                        Icon(painterResource(id = android.R.drawable.ic_menu_revert), contentDescription = "Powrót")
+                        Icon(painterResource(id = android.R.drawable.ic_menu_revert), contentDescription = "Return")
                     }
                 },
                 actions = {
                     IconButton(onClick = {
                     }) {
-                        Icon(painterResource(id = android.R.drawable.ic_delete), contentDescription = "Usuń")
+                        Icon(painterResource(id = android.R.drawable.ic_delete), contentDescription = "Delete")
                     }
                 }
             )
