@@ -42,7 +42,6 @@ fun MyImage() {
     )
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchListApp() {
