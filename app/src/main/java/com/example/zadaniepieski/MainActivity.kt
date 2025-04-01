@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +34,15 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Composable
+fun MyImage() {
+    Image(
+        painter = painterResource(id = R.drawable.image1),
+        contentDescription = "Dog Picture"
+    )
+}
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchListApp() {
@@ -39,7 +50,7 @@ fun SearchListApp() {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Doggos") },
+                title = { Text("Doggos")},
                 navigationIcon = {
                     IconButton(onClick = {
                         context.startActivity(Intent(context, SettingsActivity::class.java))
@@ -83,7 +94,7 @@ fun SearchListApp() {
                         isDuplicate = itemList.any { item -> item.equals(it, ignoreCase = true) }
                     },
                     modifier = Modifier.weight(1f),
-                    label = { Text("Search") },
+                    label = { Text("Search or add doggo") },
                     trailingIcon = {
                         Row {
                             IconButton(
@@ -127,7 +138,8 @@ fun SearchListApp() {
             Spacer(modifier = Modifier.height(16.dp))
 
 
-        Text("🐶: ${itemList.size}")
+        Text("🐶: ${itemList.size}" ,
+            modifier = Modifier.padding(start = 8.dp))
 
             if (itemList.isNotEmpty()) {
                 Column(
@@ -144,8 +156,9 @@ fun SearchListApp() {
                             },
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                        Text("🐶")
-                        Text(text = item, modifier = Modifier.weight(1f).padding(horizontal = 8.dp))
+                        MyImage()
+                        Text(text = item,modifier = Modifier.weight(1f).padding(horizontal = 8.dp),
+                            fontSize = 5.em)
                         IconButton(onClick = {
                             if (pinnedItems.contains(item)) {
                                 pinnedItems = pinnedItems.minus(item)
